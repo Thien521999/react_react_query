@@ -1,20 +1,26 @@
 import { useEffect, useState } from "react";
-import { useInfiniteQuery } from "react-query";
+import { useInfiniteQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { getInfiniteData } from "../api/productAPI";
 import Products from "../components/Products";
 import Sorting from "../components/Sorting";
 import { useMyContext } from "../context/store";
-import useInfinityQuery from "../hooks/useInfinityQuery";
+import {useInfinityQuery} from "../hooks/useInfinityQuery";
+import { useInview } from "../hooks/useInview";
 
 const Search = () => {
   const { value } = useParams();
-  console.log(value);
   const { sort } = useMyContext();
 
   const [limit, setLimit] = useState(2);
 
+  const {inview, ref} = useInview();
+
+  const queryClient = useQueryClient();
+
   const key = `/products?search=${value}&sort=${sort}&limit=${limit}`;
+
+  queryClient.setQueryData('keys', {k1: '', k2: key});
 
   const {
     data,
@@ -27,7 +33,6 @@ const Search = () => {
     // eslint-disable-next-line no-undef
   } = useInfiniteQuery(key, getInfiniteData, {
     getNextPageParam: (lastPage, pages) => {
-      console.log({lastPage, pages});
       const {products} = lastPage;
       if(products.length >= limit) {
         return pages.length + 1;
@@ -36,7 +41,15 @@ const Search = () => {
       }
     },
   });
-  console.log({ hasNextPage, isFetchingNextPage });
+  
+  // isFetchingNextPage lan dau tien no la false, tu lwn 2 tro di no moi thuc hien(excute)
+
+
+  useEffect(() => {
+    if(inview && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inview, isFetchingNextPage, fetchNextPage])
 
   return (
     <>
@@ -53,6 +66,7 @@ const Search = () => {
         className="btn-load_more"
         onClick={() => fetchNextPage()}
         disabled={!hasNextPage || isFetchingNextPage}
+        ref={ref}
       >
         Load more
       </button>

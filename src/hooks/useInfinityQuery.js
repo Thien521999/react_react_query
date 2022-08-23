@@ -6,7 +6,7 @@ const DEFAUL_OPTION = {
   firstLoad: false
 }
 
-const useInfinityQuery = ({url, depens = [], opt}) => {
+export const useInfinityQuery = ({url, depens = [], opt}) => {
   const [page, setPage] = useState(1)
 
   const option = {...DEFAUL_OPTION, ...opt}
@@ -55,5 +55,3 @@ const useInfinityQuery = ({url, depens = [], opt}) => {
 
   return { BtnRender, ...query }
 }
-
-export default useInfinityQuery

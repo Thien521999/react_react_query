@@ -1,14 +1,17 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { deleteProduct } from '../api/productAPI'
+import useLazyLoading from '../hooks/useLazyLoading'
 import useMutation from '../hooks/useMutation'
-import LazyLoadImg from './LazyLoadImg'
+// import LazyLoadImg from './LazyLoadImg'
 import Modal from './Modal'
 import ProductForm from './ProductForm'
 
 const ProductsCard = ({ product }) => {
   const [openProduct, setOpenProduct] = useState(false)
   const { mutate, loading } = useMutation()
+
+  const {ref} = useLazyLoading();
 
 
   const handleDelete = (id) => {
@@ -21,7 +24,8 @@ const ProductsCard = ({ product }) => {
   return (
     <div className='card'>
       <Link to={`/products/${product._id}`}>
-        <LazyLoadImg url={product.image} />
+        {/* <LazyLoadImg url={product.image} /> */}
+        <img alt={product.image} className="lazy-load" ref={ref} />
       </Link>
 
       <div className="box">

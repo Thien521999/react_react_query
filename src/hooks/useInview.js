@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
-
+import { useEffect, useRef, useState } from "react";
 
 export const useInview = () => {
   const [inview, setInview] = useState(false);
@@ -10,12 +9,17 @@ export const useInview = () => {
     const el = ref.current;
 
     const observer = new IntersectionObserver((entries) => {
-      console.log(entries);
-
-      // if (entries[0].intersectionRatio <= 0) return;
-
-      // console.log('Loaded new items');
+      setInview(entries[0].isIntersecting);
     });
+
+    if (el) observer.observe(el);
+    return () => {
+      if (el) observer.unobserve();
+    };
   }, []);
-  return {};
+
+  return {
+    inview,
+    ref,
+  };
 };
