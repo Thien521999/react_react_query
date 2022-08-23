@@ -2,11 +2,13 @@ import axios from "axios";
 import { toast } from 'react-toastify';
 
 export const createProduct = async (newData) => {
-  return axios.post('/products', newData)
+  const res = await axios.post('/products', newData);
+  return res.data;
 };
 
 export const updateProduct = async ({id, newData}) => {
-  return axios.put(`/products/${id}`, newData)
+  const res = await axios.put(`/products/${id}`, newData);
+  return res.data;
 };
 
 export const deleteProduct = async (id) => {
@@ -14,13 +16,13 @@ export const deleteProduct = async (id) => {
 };
 
 // -------------------------react-query------------------------
-const handleError = (error) => {
+export const handleError = (error) => {
   if(error.response.data.msg) {
-    throw new Error(error.response.data.msg);
     toast.error(error.response.data.msg);
+    throw new Error(error.response.data.msg);
   }else {
-    throw new Error(error.response);
     toast.error(error.response);
+    throw new Error(error.response);
   }
 }
 
@@ -35,8 +37,6 @@ export const getData = async ({queryKey}) => {
 }
 
 export const getInfiniteData = async ({pageParam = 1, queryKey}) => {
-  console.log({pageParam});
-
   try {
     const res = await axios.get(`${queryKey[0]}&page=${pageParam}`);  
     return res.data;

@@ -1,40 +1,49 @@
-import React, { useRef } from 'react'
-import { createProduct, updateProduct } from '../api/productAPI'
-import useMutation from '../hooks/useMutation'
+import React, { useRef } from "react";
+import { createProduct, handleError, updateProduct } from "../api/productAPI";
+// import useMutation from '../hooks/useMutation';
+import { useMutation } from "react-query";
+import { toast } from "react-toastify";
 
 const ProductForm = ({ btnTxt, data }) => {
-  const multiRef = useRef()
-  const { mutate, loading } = useMutation()
+  const multiRef = useRef();
+  // ghi dai
+  // const create = useMutation((data) => createProduct(data));
+
+  //optimazation
+  const create = useMutation(createProduct, {
+    onSuccess: (data) => toast.success("Create Product Success!!"),
+    onError: (err) => handleError(err),
+  });
+  const update = useMutation(updateProduct, {
+    onSuccess: (data) => toast.success("Update Product Success!!"),
+    onError: (err) => handleError(err),
+  });
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     const children = multiRef.current.children;
 
     const newData = [...children].reduce((obj, child) => {
-      if(!child.name) return obj;
-      return {...obj, [child.name]:child.value}
-    }, {})
+      if (!child.name) return obj;
+      return { ...obj, [child.name]: child.value };
+    }, {});
 
-    if(data){
-      const newArr = {...newData, price: Number(newData.price)} 
-      const result = shallowEqual(newArr, data)
-      if(result) return;
-      // axios.put(`products/${data._id}`, newData)
-      // .then(res => console.log(res))
-      // updateProduct({id: data._id, newData})
-      // .then(res => console.log(res))
-      mutate(() => updateProduct({id: data._id, newData}))
-    }else{
-      // axios.post(`products`, newData).then(res => console.log(res))
-      // createProduct(newData).then(res => console.log(res))
-      mutate(() => createProduct(newData))
+    if (data) {
+      const newArr = { ...newData, price: Number(newData.price) };
+      const result = shallowEqual(newArr, data);
+      if (result) return;
+      // mutate(() => updateProduct({id: data._id, newData}))
+      update.mutate({id: data._id, newData});
+    } else {
+      // mutate(() => createProduct(newData))
+      create.mutate(newData);
     }
-  }
+  };
 
   function shallowEqual(obj1, obj2) {
-    const keys = Object.keys(obj1)
+    const keys = Object.keys(obj1);
 
-    for(let key of keys){
+    for (let key of keys) {
       if (obj1[key] !== obj2[key]) {
         return false;
       }
@@ -42,41 +51,55 @@ const ProductForm = ({ btnTxt, data }) => {
     return true;
   }
 
-
   return (
-    <div className='product_form'>
+    <div className="product_form">
       <form ref={multiRef} onSubmit={handleSubmit}>
-        <input type="text" name="title"
-        placeholder="Product title" required
-        defaultValue={data?.title}
+        <input
+          type="text"
+          name="title"
+          placeholder="Product title"
+          required
+          defaultValue={data?.title}
         />
 
-        <input type="text" name="description"
-        placeholder="Product description" required
-        defaultValue={data?.description}
+        <input
+          type="text"
+          name="description"
+          placeholder="Product description"
+          required
+          defaultValue={data?.description}
         />
 
-        <input type="text" name="price"
-        placeholder="Product price" required
-        defaultValue={data?.price}
+        <input
+          type="text"
+          name="price"
+          placeholder="Product price"
+          required
+          defaultValue={data?.price}
         />
 
-        <input type="text" name="category"
-        placeholder="Product category" required
-        defaultValue={data?.category}
+        <input
+          type="text"
+          name="category"
+          placeholder="Product category"
+          required
+          defaultValue={data?.category}
         />
 
-        <input type="text" name="image"
-        placeholder="Product image" required
-        defaultValue={data?.image}
+        <input
+          type="text"
+          name="image"
+          placeholder="Product image"
+          required
+          defaultValue={data?.image}
         />
-        
-        <button disabled={loading}>
-          { loading ? 'Loading..' : btnTxt }
+
+        <button disabled={create.isLoading || update.isLoading}>
+          {create.isLoading || update.isLoading ? "Loading.." : btnTxt}
         </button>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default ProductForm
+export default ProductForm;

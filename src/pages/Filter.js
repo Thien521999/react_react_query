@@ -12,7 +12,7 @@ const Filter = () => {
   const { option, value } = useParams();
   const { sort } = useMyContext();
 
-  const [limit, setLimit] = useState(2);
+  const [limit, ] = useState(2);
 
   const {inview, ref} = useInview()
 
@@ -30,7 +30,6 @@ const Filter = () => {
     hasNextPage,
     isFetching,
     isFetchingNextPage,
-    status,
     // eslint-disable-next-line no-undef
   } = useInfiniteQuery(key, getInfiniteData, {
     getNextPageParam: (lastPage, pages) => {
@@ -47,10 +46,10 @@ const Filter = () => {
 
 
   useEffect(() => {
-    if(inview && !isFetchingNextPage) {
+    if(inview) {
       fetchNextPage();
     }
-  }, [inview, isFetchingNextPage, fetchNextPage])
+  }, [inview, fetchNextPage])
 
   return (
     <>
@@ -68,6 +67,7 @@ const Filter = () => {
         onClick={() => fetchNextPage()}
         disabled={!hasNextPage || isFetchingNextPage}
         ref={ref}
+        style={{display: (data && hasNextPage) ? 'block' : 'none'}}
       >
         Load more
       </button>

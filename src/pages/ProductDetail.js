@@ -16,25 +16,31 @@ const ProductDetail = () => {
   const key = `/products/${id}`;
   const {data: product, isLoading, error} = useQuery(key, getData, {
     enabled: !!id,
-    placeholderData: () => {
-      if(keys.k1) {
-        const data = queryClient.getQueryData(keys.k1);
+    cacheTime: 0, // tat save data in cache
+    initialData: () => {
+      if(keys?.k1) {
+        const data = queryClient.getQueryData(keys?.k1);
         const product = data.products.find( d => d._id === id);
         return product;
       }
 
-      if(keys.k2) {
-        let product;
-        const pages = queryClient.getQueryData(keys.k2)?.pages;
+      if(keys?.k2) {
+        const pages = queryClient.getQueryData(keys?.k2)?.pages;
 
-        pages.map(page => {
-          return page.products.forEach(d => {
-            if(d._id === id) {
-              product = d;
-            }
-          })
-        })
-        return product;
+        //// cach viet 1
+        // pages.map(page => {
+        //   return page.products.forEach(d => {
+        //     if(d._id === id) {
+        //       product = d;
+        //     }
+        //   })
+        // })
+
+        // cach viet 2
+        const products = pages.reduce((result, current)=>{
+          return [...result, ...current.products];
+        }, [])
+        return products.find(d => d.id === id);
       }
     }
   });

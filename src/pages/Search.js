@@ -5,14 +5,14 @@ import { getInfiniteData } from "../api/productAPI";
 import Products from "../components/Products";
 import Sorting from "../components/Sorting";
 import { useMyContext } from "../context/store";
-import {useInfinityQuery} from "../hooks/useInfinityQuery";
+// import {useInfinityQuery} from "../hooks/useInfinityQuery";
 import { useInview } from "../hooks/useInview";
 
 const Search = () => {
   const { value } = useParams();
   const { sort } = useMyContext();
 
-  const [limit, setLimit] = useState(2);
+  const [limit, ] = useState(2);
 
   const {inview, ref} = useInview();
 
@@ -29,7 +29,7 @@ const Search = () => {
     hasNextPage,
     isFetching,
     isFetchingNextPage,
-    status,
+    // status,
     // eslint-disable-next-line no-undef
   } = useInfiniteQuery(key, getInfiniteData, {
     getNextPageParam: (lastPage, pages) => {
@@ -44,12 +44,11 @@ const Search = () => {
   
   // isFetchingNextPage lan dau tien no la false, tu lwn 2 tro di no moi thuc hien(excute)
 
-
   useEffect(() => {
-    if(inview && !isFetchingNextPage) {
+    if(inview) {
       fetchNextPage();
     }
-  }, [inview, isFetchingNextPage, fetchNextPage])
+  }, [inview, fetchNextPage])
 
   return (
     <>
@@ -67,6 +66,7 @@ const Search = () => {
         onClick={() => fetchNextPage()}
         disabled={!hasNextPage || isFetchingNextPage}
         ref={ref}
+        style={{display: (data && hasNextPage) ? 'block' : 'none'}}
       >
         Load more
       </button>

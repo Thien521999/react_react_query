@@ -14,7 +14,7 @@ export const useInview = () => {
 
     if (el) observer.observe(el);
     return () => {
-      if (el) observer.unobserve();
+      if (el) observer.unobserve(el);
     };
   }, []);
 
