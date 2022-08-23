@@ -2,10 +2,6 @@
 
 > How to build a App with React (props, state, effect, custom hooks...) 
 
-## Author: Dev A.T Viet Nam
-
-## Youtube: https://youtu.be/ZcW_rzIoFtE
-
 ## Getting started Demo: `npm install -> npm start`
 
 
