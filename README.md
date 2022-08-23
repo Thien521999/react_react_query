@@ -8,15 +8,6 @@
 
 ## Getting started Demo: `npm install -> npm start`
 
-## 🔥 Donate
-> + 👉 Buy Me a Coffee . Thank You ! 💗 :
-> + 👉 https://www.buymeacoffee.com/QK1DkYS
-> + 👉 Paypal : https://paypal.me/tuananh251192
-
-### 👻👻VietNam: 
-> + 👉Vietcombank: 0061001044348 (LE TUAN ANH)
-> + 👉Momo : 0374481936
-
 
 I. Requirements
   - HTML, CSS, Javascript (DOM, ES6...)
