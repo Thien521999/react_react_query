@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 // import useQuery from '../hooks/useQuery'
 import { useQuery, useQueryClient } from "react-query";
 import { getData } from "../api/productAPI";
@@ -83,16 +83,16 @@ const Home = () => {
   // };
 
   const key = `/products?limit=${limit}&page=${page}&sort=${sort}`;
-  const key1 = `/products?limit=${limit}&page=${page + 1}&sort=${sort}`;
+  // const key1 = `/products?limit=${limit}&page=${page + 1}&sort=${sort}`;
 
   queryClient.setQueryData("keys", { k1: key, k2: "" });
 
   // Prefetching thang nay dung vs NextJs la nhieu ,trong thuc te su dung rat it vi co mot so tac dung phu
-  useEffect(() => {
-    (async () => {
-      await queryClient.prefetchQuery(key1, getData);
-    })();
-  }, [key1, queryClient]);
+  // useEffect(() => {
+  //   (async () => {
+  //     await queryClient.prefetchQuery(key1, getData);
+  //   })();
+  // }, [key1, queryClient]);
 
   const {
     data,
@@ -104,7 +104,7 @@ const Home = () => {
     queryKey: key,
     queryFn: getData,
     keepPreviousData: true,
-    cacheTime: 60 * 1000 * 10, //sau 10 phút se xoá cache đi,  defautl là 3 phút,
+    cacheTime: 60 * 1000 * 10, //sau 10 phút se xoá cache đi,  default là 3 phút,
     // initialData: newData, //data thật, dc save trong catch
     // placehoderData: newData, //data gia, ko dc save trong catch,
     // initialDataUpdatedAt: 10, //sau 10 ms se tim nap lai du lieu
